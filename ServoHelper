@@ -1,0 +1,24 @@
+#include <Servo.h>
+
+Servo motor;
+int angle = 90;
+
+void setup() {
+  motor.attach(9); // Attach servo to pin 9
+  Serial.begin(9600); // Set the baud rate for serial communication
+  motor.write(angle); // Set to initial position
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    // Read the data sent from Python (e.g., "0", "90", "180")
+    String data = Serial.readStringUntil('\n');
+    int newAngle = data.toInt(); // Convert the string to an integer
+    
+    // Constrain the angle to the valid range (0-180)
+    if (newAngle >= 0 && newAngle <= 180) {
+      angle = newAngle;
+      motor.write(angle); // Move the servo to the new angle
+    }
+  }
+}
